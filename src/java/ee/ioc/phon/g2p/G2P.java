@@ -214,8 +214,11 @@ public class G2P {
 						j += 1;
 					}
 				}
+				System.out.println("\t"); // +TV
 			} catch (TooComplexWordException e) {
-				System.err.println("WARNING: cannot convert word [" + word + "], reason: " + e.getMessage());
+				// System.err.println("WARNING: cannot convert word [" + word + "], reason: " + e.getMessage()); // -TV
+				System.out.println(word + "\tWARNING: cannot convert word, reason: " + e.getMessage());    // +TV
+				System.out.println("\t");
 			}
 		}
 
