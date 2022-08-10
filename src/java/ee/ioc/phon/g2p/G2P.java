@@ -198,9 +198,9 @@ public class G2P {
 				for (int i = 0; i < pronunciations.size(); i++) {
 					String pronunciation = Utils.arrayToString(pronunciations.get(i));
 					System.out.print(word);
-					if (j > 0) {
-						System.out.print("(" + (j+1) + ")");
-					}
+					//-TV if (j > 0) {
+					//-TV	System.out.print("(" + (j+1) + ")");
+					//-TV }
 					System.out.print("\t");
 					System.out.println(pronunciation.replace(" _ ", " "));
 					j += 1;
@@ -209,16 +209,16 @@ public class G2P {
 						if (j > 0) {
 							System.out.print("(" + (j+1) + ")");
 						}
-						System.out.print("\t");
+						System.out.print("<EOV/>");
 						System.out.println(pronunciation.replace(" _ ", " " + silencePhoneme + " "));
 						j += 1;
 					}
 				}
-				System.out.println("\t"); // +TV
+				System.out.println("<EOV/>"); // +TV
 			} catch (TooComplexWordException e) {
 				// System.err.println("WARNING: cannot convert word [" + word + "], reason: " + e.getMessage()); // -TV
 				System.out.println(word + "\tWARNING: cannot convert word, reason: " + e.getMessage());    // +TV
-				System.out.println("\t");
+				System.out.println("<EOV/>");
 			}
 		}
 
