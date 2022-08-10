@@ -26,7 +26,7 @@ Run
     <EOV/>
 	$
 
-Error message goes to stdout.
+The error message goes to stdout.
 
     $ echo -e "palgi_koorem\npaµk\nOECD" | ./run.sh
     palgi_koorem	p a l k i k o o r e m
