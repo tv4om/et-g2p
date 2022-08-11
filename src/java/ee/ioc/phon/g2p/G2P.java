@@ -194,31 +194,34 @@ public class G2P {
 			String word = line.trim();
 			try {
 				List<String[]> pronunciations = g2p.graphemes2Phonemes(word);
+				System.out.print("{\"token\":\"" + word + "\",\"pronunciations\": [");
 				int j = 0;
 				for (int i = 0; i < pronunciations.size(); i++) {
 					String pronunciation = Utils.arrayToString(pronunciations.get(i));
-					System.out.print(word);
-					//-TV if (j > 0) {
-					//-TV	System.out.print("(" + (j+1) + ")");
-					//-TV }
-					System.out.print("\t");
-					System.out.println(pronunciation.replace(" _ ", " "));
+					System.out.print("\"" + pronunciation.replace(" _ ", " ") + "\"");
 					j += 1;
 					if ((silencePhoneme != null) && (pronunciation.indexOf("_") > 0)) {
-						System.out.print(word);
-						if (j > 0) {
-							System.out.print("(" + (j+1) + ")");
+						if (j <= 0) {
+							System.out.print("(", j, "]");
+							System.out.print("\"");
+							System.out.print(pronunciation.replace(" _ ", " " + silencePhoneme + " "));
+							System.out.print("\"");
 						}
-						System.out.print("<EOV/>");
-						System.out.println(pronunciation.replace(" _ ", " " + silencePhoneme + " "));
+						else
+							System.out.print("(", j, "]");
+							System.out.print(",\"");
+							System.out.print(pronunciation.replace(" _ ", " " + silencePhoneme + " "));
+							System.out.print("\"");
 						j += 1;
 					}
 				}
-				System.out.println("<EOV/>"); // +TV
+				System.out.println("]}");
+				//System.out.println("<EOV/>"); // +TV
 			} catch (TooComplexWordException e) {
 				// System.err.println("WARNING: cannot convert word [" + word + "], reason: " + e.getMessage()); // -TV
-				System.out.println(word + "\tWARNING: cannot convert word, reason: " + e.getMessage());    // +TV
-				System.out.println("<EOV/>");
+				//System.out.println("{\"token":\"" + word + "\"+",\"warning:\":\"cannot convert word, reason: " + e.getMessage()+"\"");    // +TV
+				System.out.println("{\"token\":\"" + word + "\",\"warning\":\"cannot convert word, reason:" + e.getMessage() + "\"}");
+				//System.out.println("<EOV/>");
 			}
 		}
 
