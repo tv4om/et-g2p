@@ -26,8 +26,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-
-
 public class G2P {
 	private List<SubstitionRule> l2pRules;
 	private List<SubstitionRule> wordVariantRules;
@@ -190,41 +188,72 @@ public class G2P {
 	        silencePhoneme = commandLine.getOptionValue("sil");
 	    }
 		
+		/* TV-{{ Tanel's loop
 		while ((line = br.readLine()) != null) {
 			String word = line.trim();
 			try {
 				List<String[]> pronunciations = g2p.graphemes2Phonemes(word);
-				System.out.print("{\"token\":\"" + word + "\",\"pronunciations\": [");
 				int j = 0;
 				for (int i = 0; i < pronunciations.size(); i++) {
 					String pronunciation = Utils.arrayToString(pronunciations.get(i));
-					System.out.print("\"" + pronunciation.replace(" _ ", " ") + "\"");
+					System.out.print(word);
+					if (j > 0) {
+						System.out.print("(" + (j+1) + ")");
+					}
+					System.out.print("\t");
+					System.out.println(pronunciation.replace(" _ ", " "));
 					j += 1;
 					if ((silencePhoneme != null) && (pronunciation.indexOf("_") > 0)) {
-						if (j <= 0) {
-							System.out.print("(", j, "]");
-							System.out.print("\"");
-							System.out.print(pronunciation.replace(" _ ", " " + silencePhoneme + " "));
-							System.out.print("\"");
+						System.out.print(word);
+						if (j > 0) {
+							System.out.print("(" + (j+1) + ")");
 						}
-						else
-							System.out.print("(", j, "]");
-							System.out.print(",\"");
-							System.out.print(pronunciation.replace(" _ ", " " + silencePhoneme + " "));
-							System.out.print("\"");
+						System.out.print("\t");
+						System.out.println(pronunciation.replace(" _ ", " " + silencePhoneme + " "));
 						j += 1;
 					}
 				}
-				System.out.println("]}");
-				//System.out.println("<EOV/>"); // +TV
 			} catch (TooComplexWordException e) {
-				// System.err.println("WARNING: cannot convert word [" + word + "], reason: " + e.getMessage()); // -TV
-				//System.out.println("{\"token":\"" + word + "\"+",\"warning:\":\"cannot convert word, reason: " + e.getMessage()+"\"");    // +TV
-				System.out.println("{\"token\":\"" + word + "\",\"warning\":\"cannot convert word, reason:" + e.getMessage() + "\"}");
-				//System.out.println("<EOV/>");
+				System.err.println("WARNING: cannot convert word [" + word + "], reason: " + e.getMessage());
+			}
+		}		
+		}}-TV*/
+
+		// TV+{{ loop with pseudo-json output
+		while ((line = br.readLine()) != null) {
+			String word = line.trim();
+			try {
+				String json_out = "";
+				List<String[]> pronunciations = g2p.graphemes2Phonemes(word);
+				json_out += "{\"token\":\"" + word.replace("\"", "\\\"")
+												+ "\",\"pronunciations\": [\"";
+				int j = 0;
+				for (int i = 0; i < pronunciations.size(); i++) {
+					String pronunciation = Utils.arrayToString(pronunciations.get(i));
+					if (j > 0) {
+						json_out += "\",\"";
+					}
+					json_out += pronunciation.replace(" _ ", " ");
+					j += 1;
+					if ((silencePhoneme != null) && (pronunciation.indexOf("_") > 0)) {
+						if (j > 0) {
+							json_out += "\",\"";
+						}
+						json_out += "\"" + pronunciation.replace(" _ ", " " 
+												+ silencePhoneme + " ") + "\"";
+						j += 1;
+					}
+				}
+				json_out += "\"]}";
+				System.out.println(json_out);
+			} catch (TooComplexWordException e) {
+				// Warnings in pseudo-json format to stdout
+				System.out.println("{\"token\":\"" + word 
+					+ "\",\"warning\":\"cannot convert word, reason:" 
+					+ e.getMessage() + "\"}");
 			}
 		}
-
+	// }}+TV
 	}
 
 }
