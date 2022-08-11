@@ -1,3 +1,9 @@
+Changelist:
+===========
+
+* src/G2P.java -- pseudo-json output
+* README.md -- updated examples
+
 Grapheme to phoneme rules for Estonian
 ======================================
 
@@ -21,55 +27,34 @@ Test
 Run
 ---
 	
-    $ echo "kesk_pank" | ./run.sh
-    kesk_pank	k e s k p a n kk
-    <EOV/>
+    $echo "kesk_pank" | ./run.sh
+    {"token":"kesk_pank","pronunciations": ["k e s k p a n kk"]}
 	$
 
 The error message goes to stdout.
 
     $ echo -e "palgi_koorem\npaµk\nOECD" | ./run.sh
-    palgi_koorem	p a l k i k o o r e m
-    <EOV/>
-    paµk	WARNING: cannot convert word, reason: Unknown character [µ] in input
-    <EOV/>
-    OECD	o e k t
-    OECD	o o e e t s e e t e e
-    <EOV/>
+    {"token":"palgi_koorem","pronunciations": ["p a l k i k o o r e m"]}
+    {"token":"paµk","warning":"cannot convert word, reason:Unknown character [µ] in input"}
+    {"token":"OECD","pronunciations": ["o e k t","o o e e t s e e t e e"]}
 	$
 
 The script reads words from stdin and writes words with their pronunciations back to stdout. Usually it's used to process 
 a long list of words at a time:
 
     $ ./run.sh < example/sample.vocab
-    kana	k a n a
-    <EOV/>
-    park	p a r kk
-    <EOV/>
-    näinud	n ae i n u t
-    näinud	n ae i n t
-    <EOV/>
-    kontsa	k o n t s a
-    <EOV/>
-    kesk_pank	k e s k p a n kk
-    <EOV/>
-    OECD	o e k t
-    OECD	o o e e t s e e t e e
-    <EOV/>
-    ETV24	e e t e e v e e k a k s k ue m m e n t n e l i
-    ETV24	e e t e e v e e k a h e k ue m n e n e l j a
-    <EOV/>
-    ETV24-le	e e t e e v e e k a h e k ue m n e n e l j a l e
-    <EOV/>
-    NATO	n a tt o
-    <EOV/>
-    ABC-pood	a p k p o o t
-    ABC-pood	a a p e e t s e e p o o t
-    <EOV/>
-    René	r e n e
-    <EOV/>
-    Poincaré	p o i n kk a r e
-    <EOV/>
+    {"token":"kana","pronunciations": ["k a n a"]}
+    {"token":"park","pronunciations": ["p a r kk"]}
+    {"token":"näinud","pronunciations": ["n ae i n u t","n ae i n t"]}
+    {"token":"kontsa","pronunciations": ["k o n t s a"]}
+    {"token":"kesk_pank","pronunciations": ["k e s k p a n kk"]}
+    {"token":"OECD","pronunciations": ["o e k t","o o e e t s e e t e e"]}
+    {"token":"ETV24","pronunciations": ["e e t e e v e e k a k s k ue m m e n t n e l i","e e t e e v e e k a h e k ue m n e n e l j a"]}
+    {"token":"ETV24-le","pronunciations": ["e e t e e v e e k a h e k ue m n e n e l j a l e"]}
+    {"token":"NATO","pronunciations": ["n a tt o"]}
+    {"token":"ABC-pood","pronunciations": ["a p k p o o t","a a p e e t s e e p o o t"]}
+    {"token":"René","pronunciations": ["r e n e"]}
+    {"token":"Poincaré","pronunciations": ["p o i n kk a r e"]}
 	$
 	
 The script can be also executed from any other directory:
